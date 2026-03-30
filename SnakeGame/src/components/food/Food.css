@@ -1,0 +1,57 @@
+.snake-food {
+  position: absolute;
+  left: calc(var(--food-x) * var(--cell-size));
+  top: calc(var(--food-y) * var(--cell-size));
+  width: var(--cell-size);
+  height: var(--cell-size);
+  filter: drop-shadow(0 0 10px rgba(255, 91, 61, 0.26));
+}
+
+.snake-food-body,
+.snake-food-shine,
+.snake-food-leaf,
+.snake-food-stem {
+  position: absolute;
+}
+
+.snake-food-body {
+  left: 13%;
+  top: 18%;
+  width: 74%;
+  height: 70%;
+  border-radius: 40% 40% 46% 46%;
+  background:
+    radial-gradient(circle at 28% 26%, #ffddcf, #ff6a4d 28%, #d82620 66%, #931312 100%);
+  box-shadow:
+    inset 0 -3px 4px rgba(94, 12, 8, 0.35),
+    inset 0 2px 2px rgba(255, 255, 255, 0.28);
+}
+
+.snake-food-shine {
+  left: 28%;
+  top: 27%;
+  width: 18%;
+  height: 14%;
+  border-radius: 50%;
+  background: rgba(255, 248, 243, 0.7);
+  transform: rotate(-18deg);
+}
+
+.snake-food-stem {
+  left: 47%;
+  top: 8%;
+  width: 8%;
+  height: 20%;
+  border-radius: 999px;
+  background: #5f3216;
+}
+
+.snake-food-leaf {
+  left: 48%;
+  top: 6%;
+  width: 24%;
+  height: 16%;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #9ffd8f, #3eae4f);
+  transform: rotate(-22deg);
+}
