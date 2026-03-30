@@ -24,7 +24,7 @@ export interface BoardSize {
 
 export interface GameState {
   snake: Snake
-  food: Food
+  food: Food | null
   score: number
   status: GameStatus
   board: BoardSize
