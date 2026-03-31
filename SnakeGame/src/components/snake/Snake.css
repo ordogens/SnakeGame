@@ -4,7 +4,9 @@
   top: calc(var(--segment-y) * var(--cell-size));
   width: var(--cell-size);
   height: var(--cell-size);
+  z-index: 2;
   border-radius: 35%;
+  
   background:
     radial-gradient(circle at 30% 30%, #d8ffc5, #79d670 42%, #267d37 82%);
   box-shadow:

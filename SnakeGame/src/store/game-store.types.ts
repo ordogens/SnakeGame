@@ -1,8 +1,16 @@
-import type { BoardSize, Direction, Food, GameStatus, Snake } from '../types'
+import type {
+  BoardSize,
+  Direction,
+  Food,
+  GameStatus,
+  ScoreGainEvent,
+  Snake,
+} from '../types'
 
 export interface SnakeGameStoreState {
   snake: Snake
   food: Food | null
+  lastScoreGain: ScoreGainEvent | null
   score: number
   status: GameStatus
   board: BoardSize
@@ -15,6 +23,7 @@ export interface SnakeGameStoreActions {
   startGame: () => void
   pauseGame: () => void
   resumeGame: () => void
+  togglePause: () => void
   resetGame: () => void
 }
 

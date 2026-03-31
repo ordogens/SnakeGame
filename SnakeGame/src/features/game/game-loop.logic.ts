@@ -25,15 +25,24 @@ function isSamePosition(first: Position, second: Position): boolean {
 function buildNextSnake(
   snake: Snake,
   nextHead: Position,
-  shouldGrow: boolean,
+  growthSegments: number,
 ): Snake {
+  const followingDirection = snake.queuedDirection ?? snake.nextDirection
+  const retainedBody =
+    growthSegments > 0 ? snake.segments : snake.segments.slice(0, -1)
+  const extraTailSegments =
+    growthSegments > 1
+      ? Array.from({ length: growthSegments - 1 }, () => ({
+          ...snake.segments[snake.segments.length - 1],
+        }))
+      : []
+
   return {
     ...snake,
     direction: snake.nextDirection,
-    nextDirection: snake.nextDirection,
-    segments: shouldGrow
-      ? [nextHead, ...snake.segments]
-      : [nextHead, ...snake.segments.slice(0, -1)],
+    nextDirection: followingDirection,
+    queuedDirection: null,
+    segments: [nextHead, ...retainedBody, ...extraTailSegments],
   }
 }
 
@@ -55,12 +64,16 @@ export function advanceGameState(
     }
   }
 
-  const shouldGrow =
+  const eatenFood =
     state.food !== null && isSamePosition(nextHead, state.food.position)
+      ? state.food
+      : null
+  const growthSegments = eatenFood === null ? 0 : eatenFood.kind === 'gold' ? 2 : 1
+  const scoreGain = eatenFood === null ? 0 : eatenFood.kind === 'gold' ? 10 : 5
 
   if (
     hasSelfCollision(state.snake, nextHead, {
-      ignoreTail: !shouldGrow,
+      ignoreTail: growthSegments === 0,
     })
   ) {
     return {
@@ -69,14 +82,23 @@ export function advanceGameState(
     }
   }
 
-  const nextSnake = buildNextSnake(state.snake, nextHead, shouldGrow)
-  const nextScore = shouldGrow ? state.score + 1 : state.score
-  const nextFood = shouldGrow ? createFood(state.board, nextSnake, random) : state.food
+  const nextSnake = buildNextSnake(state.snake, nextHead, growthSegments)
+  const nextScore = state.score + scoreGain
+  const nextFood = eatenFood !== null ? createFood(state.board, nextSnake, random) : state.food
 
   return {
     ...state,
     snake: nextSnake,
     food: nextFood,
+    lastScoreGain:
+      eatenFood === null
+        ? null
+        : {
+            id: (state.lastScoreGain?.id ?? 0) + 1,
+            amount: scoreGain,
+            position: nextHead,
+            kind: eatenFood.kind,
+          },
     score: nextScore,
   }
 }

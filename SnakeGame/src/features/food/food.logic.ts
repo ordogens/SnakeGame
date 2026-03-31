@@ -1,4 +1,10 @@
-import type { BoardSize, Food, Position, Snake } from '../../types'
+import type { BoardSize, Food, FoodKind, Position, Snake } from '../../types'
+
+const GOLD_FOOD_CHANCE = 0.12
+
+function getRandomFoodKind(random: () => number): FoodKind {
+  return random() < GOLD_FOOD_CHANCE ? 'gold' : 'red'
+}
 
 export function isSnakeOnPosition(snake: Snake, position: Position): boolean {
   return snake.segments.some(
@@ -40,5 +46,6 @@ export function createFood(
 
   return {
     position: availablePositions[randomIndex],
+    kind: getRandomFoodKind(random),
   }
 }

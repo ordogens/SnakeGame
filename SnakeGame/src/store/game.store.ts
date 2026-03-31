@@ -1,73 +1,16 @@
 import { createStore } from 'zustand/vanilla'
 
-import { createFood } from '../features/food'
 import { advanceGameState } from '../features/game'
 import { changeSnakeDirection } from '../features/snake'
-import type { GameState, Snake } from '../types'
 import type {
   SnakeGameStore,
   SnakeGameStoreConfig,
-  SnakeGameStoreState,
 } from './game-store.types'
-
-const DEFAULT_BOARD = {
-  width: 20,
-  height: 20,
-} as const
-
-const DEFAULT_TICK_RATE_MS = 150
-
-function createInitialSnake(): Snake {
-  return {
-    direction: 'right',
-    nextDirection: 'right',
-    segments: [
-      { x: 10, y: 10 },
-      { x: 9, y: 10 },
-      { x: 8, y: 10 },
-    ],
-  }
-}
-
-function createInitialState(
-  config: SnakeGameStoreConfig = {},
-): SnakeGameStoreState {
-  const board = config.board ?? DEFAULT_BOARD
-  const tickRateMs = config.tickRateMs ?? DEFAULT_TICK_RATE_MS
-  const random = config.random ?? Math.random
-  const snake = createInitialSnake()
-
-  return {
-    snake,
-    food: createFood(board, snake, random),
-    score: 0,
-    status: 'paused',
-    board,
-    tickRateMs,
-  }
-}
-
-function toGameState(state: SnakeGameStoreState): GameState {
-  return {
-    snake: state.snake,
-    food: state.food,
-    score: state.score,
-    status: state.status,
-    board: state.board,
-    tickRateMs: state.tickRateMs,
-  }
-}
-
-function fromGameState(state: GameState): SnakeGameStoreState {
-  return {
-    snake: state.snake,
-    food: state.food,
-    score: state.score,
-    status: state.status,
-    board: state.board,
-    tickRateMs: state.tickRateMs,
-  }
-}
+import {
+  createInitialState,
+  fromGameState,
+  toGameState,
+} from './game-state.adapters'
 
 export function createSnakeGameStore(config: SnakeGameStoreConfig = {}) {
   const initialState = createInitialState(config)
@@ -77,9 +20,15 @@ export function createSnakeGameStore(config: SnakeGameStoreConfig = {}) {
     ...initialState,
 
     setDirection: (direction) => {
-      set((state) => ({
-        snake: changeSnakeDirection(state.snake, direction),
-      }))
+      set((state) => {
+        if (state.status === 'gameOver') {
+          return {}
+        }
+
+        return {
+          snake: changeSnakeDirection(state.snake, direction),
+        }
+      })
     },
 
     tick: (random = defaultRandom) => {
@@ -89,9 +38,17 @@ export function createSnakeGameStore(config: SnakeGameStoreConfig = {}) {
     },
 
     startGame: () => {
-      set((state) => ({
-        status: state.status === 'gameOver' ? 'paused' : 'playing',
-      }))
+      set((state) => {
+        if (state.status === 'playing') {
+          return {}
+        }
+
+        if (state.status === 'gameOver') {
+          return createInitialState(config, 'playing')
+        }
+
+        return { status: 'playing' }
+      })
     },
 
     pauseGame: () => {
@@ -102,8 +59,22 @@ export function createSnakeGameStore(config: SnakeGameStoreConfig = {}) {
       set((state) => (state.status === 'paused' ? { status: 'playing' } : {}))
     },
 
+    togglePause: () => {
+      set((state) => {
+        if (state.status === 'playing') {
+          return { status: 'paused' }
+        }
+
+        if (state.status === 'paused') {
+          return { status: 'playing' }
+        }
+
+        return {}
+      })
+    },
+
     resetGame: () => {
-      set(createInitialState(config))
+      set(createInitialState(config, 'playing'))
     },
   }))
 }

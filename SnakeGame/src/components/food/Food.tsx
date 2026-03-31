@@ -13,14 +13,14 @@ export function Food({ food }: FoodProps) {
 
   return (
     <div
-      className="snake-food"
+      className={`snake-food snake-food-${food.kind}`}
       style={
         {
           '--food-x': food.position.x,
           '--food-y': food.position.y,
         } as CSSProperties
       }
-      aria-label="Manzana"
+      aria-label={food.kind === 'gold' ? 'Manzana dorada' : 'Manzana roja'}
       role="img"
     >
       <span className="snake-food-leaf" />
