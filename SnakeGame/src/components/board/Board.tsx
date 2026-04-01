@@ -38,6 +38,23 @@ export function Board({
     '--board-height': `calc(${board.height} * var(--cell-size))`,
   } as CSSProperties
 
+  const boardOverlay =
+    status === 'gameOver'
+      ? {
+          badge: 'Run terminated',
+          title: 'GAME OVER',
+          caption: 'Presiona reiniciar y vuelve por otro high score.',
+          modifierClassName: 'snake-board-overlay-game-over',
+        }
+      : status === 'paused'
+        ? {
+            badge: 'Game halted',
+            title: 'PAUSA',
+            caption: 'Retoma cuando quieras. Tu partida sigue intacta.',
+            modifierClassName: 'snake-board-overlay-paused',
+          }
+        : null
+
   return (
     <section className="snake-board-shell">
       <div className="snake-board-layout">
@@ -104,6 +121,17 @@ export function Board({
               ) : null}
               <Food food={food} />
               <Snake snake={snake} />
+              {boardOverlay !== null ? (
+                <div
+                  className={`snake-board-overlay ${boardOverlay.modifierClassName}`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span className="snake-board-overlay-badge">{boardOverlay.badge}</span>
+                  <strong className="snake-board-overlay-title">{boardOverlay.title}</strong>
+                  <p className="snake-board-overlay-caption">{boardOverlay.caption}</p>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
