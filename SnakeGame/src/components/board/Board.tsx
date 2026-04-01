@@ -59,46 +59,54 @@ export function Board({
     <section className="snake-board-shell">
       <div className="snake-board-layout">
         <aside className="snake-board-sidebar">
-          <header className="snake-board-header">
-            <div>
-              <p className="snake-board-eyebrow">Snake Orchard</p>
-              <h1 className="snake-board-title">Manzanas, ritmo y control</h1>
+          <div className="snake-board-console">
+            <div className="snake-board-console-chassis" aria-hidden="true">
+              <span className="snake-board-console-dial snake-board-console-dial-large" />
+              <span className="snake-board-console-dial snake-board-console-dial-small" />
+              <span className="snake-board-console-speaker" />
             </div>
 
-            <div className="snake-board-stats" aria-label="Estado del juego">
-              <div className="snake-board-pill">
-                <span className="snake-board-pill-label">Score</span>
-                <strong>{score ?? 0}</strong>
+            <header className="snake-board-header">
+              <div>
+                <p className="snake-board-eyebrow">Snake Orchard</p>
+                <h1 className="snake-board-title">Manzanas, ritmo y control</h1>
               </div>
-              <div className="snake-board-pill">
-                <span className="snake-board-pill-label">Estado</span>
-                <strong>{status ?? 'paused'}</strong>
-              </div>
-            </div>
-          </header>
 
-          <div className="snake-board-actions">
-            <button
-              className="snake-board-action snake-board-action-primary"
-              onClick={onPauseToggle}
-              type="button"
-            >
-              {status === 'playing' ? 'Pausar' : 'Jugar'}
-            </button>
-            <button
-              className="snake-board-action"
-              onClick={onRestart}
-              type="button"
-            >
-              Reiniciar
-            </button>
+              <div className="snake-board-stats" aria-label="Estado del juego">
+                <div className="snake-board-pill">
+                  <span className="snake-board-pill-label">Score</span>
+                  <strong>{score ?? 0}</strong>
+                </div>
+                <div className="snake-board-pill">
+                  <span className="snake-board-pill-label">Estado</span>
+                  <strong>{status ?? 'paused'}</strong>
+                </div>
+              </div>
+            </header>
+
+            <div className="snake-board-actions">
+              <button
+                className="snake-board-action snake-board-action-primary"
+                onClick={onPauseToggle}
+                type="button"
+              >
+                {status === 'playing' ? 'Pausar' : 'Jugar'}
+              </button>
+              <button
+                className="snake-board-action"
+                onClick={onRestart}
+                type="button"
+              >
+                Reiniciar
+              </button>
+            </div>
+
+            <footer className="snake-board-footer">
+              <span>Flechas o WASD para moverte</span>
+              <span>Espacio o P para pausar</span>
+              <span>R para reiniciar</span>
+            </footer>
           </div>
-
-          <footer className="snake-board-footer">
-            <span>Flechas o WASD para moverte</span>
-            <span>Espacio o P para pausar</span>
-            <span>R para reiniciar</span>
-          </footer>
         </aside>
 
         <div className="snake-board-stage">
